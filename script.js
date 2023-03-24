@@ -1,6 +1,6 @@
 let lat=28.7041,long=77.1025;
-let weatherKey="";
-let geocodingKey="";
+let weatherKey=${{ secrets.weatherKey }};
+let geocodingKey=${{ secrets.geocodingKey }};
 
 
 const refreshPage=async (data)=>{
