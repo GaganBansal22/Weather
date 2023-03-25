@@ -89,9 +89,15 @@ li img{
     background-color:#efefef; 
     padding-bottom:0;
 }
-li:hover,li:focus{
+li button:hover{
     background-color: white;
     cursor: pointer;
+}
+li button{
+    width: 100%;
+    background-color:#efefef; 
+    border: 0;
+    text-align: left;
 }
 ol{
     padding-left: 0;
@@ -99,4 +105,14 @@ ol{
 }
 .lociconhovercolorchange{
     background-color: white;
+}
+.currentbutton{
+    width: 90%;
+    margin-top: 5px;
+    text-align: left;
+    background-color: white;
+    border: none;
+}
+.currentbutton:hover{
+    border: 2px solid black;
 }

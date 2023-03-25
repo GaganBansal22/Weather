@@ -1,10 +1,8 @@
 let lat=28.7041,long=77.1025;
-let weatherKey=${{ secrets.weatherKey }};
-let geocodingKey=${{ secrets.geocodingKey }};
-
+let weatherKey="";
+let geocodingKey="";
 
 const refreshPage=async (data)=>{
-    try{
         let rurl=`https://api.bigdatacloud.net/data/reverse-geocode`;
         config={params:{latitude:lat,longitude:long,key:geocodingKey}};
         let rgeo=await axios.get(rurl,config);
@@ -35,10 +33,6 @@ const refreshPage=async (data)=>{
         if(wCondition=="Thunderstorm")
             document.querySelector(".main").classList.add("whitetext");
         document.body.style.backgroundImage = `url('Images/${wCondition}.jpg')`;
-    }catch (error) {
-        document.querySelector(".main").classList.toggle("none");
-        document.querySelector(".error").classList.toggle("none");
-    }
 }
 
 const findTemp=async ()=>{
@@ -59,13 +53,24 @@ const findLoc=async () =>{
         findTemp();
     }
     let e=(err)=>{
-        ;
+        alert("Unable to fetch location");
     }
     navigator.geolocation.getCurrentPosition(s,e);
 }
 
-findTemp()
-findLoc()
+const initialLoad=async()=>{
+    try{
+        let data=await axios.get(`https://api.bigdatacloud.net/data/ip-geolocation?key=${geocodingKey}`)
+        lat=data.data.location.latitude;
+        long=data.data.location.longitude;
+        
+    }
+    catch(e){
+        ;
+    }
+    findTemp();
+}
+initialLoad();
 
 let searchForm=document.querySelector(".search");
 let ol=document.querySelector(".ol");
@@ -90,11 +95,12 @@ let locSearchFunc=async()=>{
         for(let i=0;i<searchReturnData.data.length;i++){
             let add=searchReturnData.data[i];
             let li=document.createElement("li");
-            li.innerHTML=`<img tabindex='${i}' src="Images/geo-alt-fill.svg">  ${add.name}, ${add.state}, ${add.country}`;
+            li.innerHTML=`<button><img tabindex='${i}' src="Images/geo-alt-fill.svg">  ${add.name}, ${add.state}, ${add.country}</button>`;
             ol.appendChild(li);
         }
-        for(let i=0;i<(document.querySelectorAll("li").length);i++){
-            document.querySelectorAll("li")[i].addEventListener("click",()=>{
+        let noOfLi=document.querySelectorAll("li").length
+        for(let i=0;i<noOfLi;i++){
+            document.querySelectorAll("li button")[i].addEventListener("click",()=>{
                 lat=searchReturnData.data[i].lat;
                 long=searchReturnData.data[i].lon;
                 document.querySelector(".searchfinal").classList.add("searchdivinitial");
@@ -104,6 +110,7 @@ let locSearchFunc=async()=>{
                 document.querySelector(".searchiconfinal").classList.add("searchiconinitial");
                 document.querySelector(".searchiconinitial").classList.remove("searchiconfinal");
                 ol.classList.add("none");
+                document.querySelector(".currentbutton").classList.add("none");
                 searchForm.value="";
                 findTemp();
             })
@@ -113,7 +120,29 @@ let locSearchFunc=async()=>{
             document.querySelectorAll("li")[i].addEventListener("mouseout",()=>{
                 document.querySelectorAll("li img")[i].classList.toggle("lociconhovercolorchange");
             })
+            document.querySelectorAll("li")[i].firstChild.addEventListener("keydown",(evt)=>{
+                if(evt.key=="ArrowDown")
+                    document.querySelectorAll("li")[(i+1)%noOfLi].firstChild.focus();
+                if(evt.key=="ArrowUp"){
+                    if(i==0)
+                        document.querySelector(".currentbutton").focus();
+                    else
+                        document.querySelectorAll("li")[(i-1)%noOfLi].firstChild.focus();
+                }
+            })
         }
+        searchForm.addEventListener("keydown",(evt)=>{
+            if(evt.key=="ArrowDown")
+                document.querySelector(".currentbutton").focus();
+            if(evt.key=="ArrowUp")
+                document.querySelectorAll("li")[noOfLi-1].firstChild.focus();
+        })
+        document.querySelector(".currentbutton").addEventListener("keydown",(evt)=>{
+            if(evt.key=="ArrowDown")
+                document.querySelector("li button").focus();
+            if(evt.key=="ArrowUp")
+                searchForm.focus();
+        })
     }catch (error) {
         document.querySelector(".main").classList.toggle("none");
         document.querySelector(".error").classList.toggle("none");
@@ -121,11 +150,23 @@ let locSearchFunc=async()=>{
 }
 
 document.querySelector("img").addEventListener("click",locSearchFunc);
-searchForm.addEventListener("keypress",(evt)=>{
-    if(evt.key=="Enter")
-        locSearchFunc();
+searchForm.addEventListener("focus",()=>{
+    document.querySelector(".currentbutton").classList.remove("none");
 })
-
+searchForm.addEventListener("keydown",(evt)=>{
+    if(evt.key=="Enter" && searchForm.value!="")
+        locSearchFunc();
+    if(evt.key=="ArrowDown" || evt.key=="ArrowUp")
+        document.querySelector(".currentbutton").focus();
+})
+document.querySelector(".currentbutton").addEventListener("keydown",(evt)=>{
+    if(evt.key=="ArrowDown" || evt.key=="ArrowUp")
+        searchForm.focus();
+    if(evt.key=="Enter"){
+        document.querySelector(".currentbutton").classList.add("none");
+        findLoc();
+    }
+})
 document.querySelector(".main").addEventListener("click",(evt)=>{
     if(!searchForm.classList.contains("inputboxinitial")){
         document.querySelector(".searchfinal").classList.add("searchdivinitial");
@@ -136,4 +177,6 @@ document.querySelector(".main").addEventListener("click",(evt)=>{
         document.querySelector(".searchiconinitial").classList.remove("searchiconfinal");
         ol.classList.add("none");
     }
+    if(!document.querySelector(".currentbutton").classList.contains("none"))
+        document.querySelector(".currentbutton").classList.add("none");
 })
