@@ -1,0 +1,127 @@
+body{
+    display:flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    background-repeat: no-repeat;
+    background-size: 100% 100%;
+    background-attachment: fixed;
+  }
+  .whitetext{
+    color:white;
+  }
+  .none{
+    display:none;
+  }
+  .main{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .temp,.mainw{
+    margin-top: 0;
+  }
+  .extra{
+    display: flex;
+    width: 100%;
+    max-width: 25vw;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .mintemp,.maxtemp,.feeltemp,.humidity{
+    text-align: center;
+    width:50%;
+  }
+  .feeltemp,.humidity{
+    width: 100%;
+  }
+  .searchdiv{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 35%;
+    border-radius: 20px ;
+    padding: 0.7% 0.1%;
+    margin-top: 1%;
+  }
+  @media (max-width:576px) {
+    .searchdiv{
+      width: 80%;
+      padding-top: 2%;
+      padding-bottom: 2%;
+      padding-left: 1%;
+      padding-right: 1%;
+      margin-top: 5%;
+    }
+    .extra{
+      min-width: 100%;
+    }
+  }
+  .searchdivinitial{
+    background-color: #efefef;
+  }
+  .searchfinal{
+    border-radius: 5px;
+    background-color: #efefef;
+  }
+  .searchiconinitial{
+    padding: 2%;
+    background-color: white;
+  }
+  .searchiconfinal{
+    padding: 2%;
+    background-color: white;
+    border-radius: 0 5px 5px 0;
+  }
+  .inputboxinitial{
+    padding-left: 10px;
+    width: 80%;
+    border: none;
+    background-color: white;
+  }
+  .inputboxfinal{
+    padding-left: 10px;
+    background-color: white;
+    width: 80%;
+    border: none;
+    border-radius: 5px 0 0 5px;
+  }
+  .searchiconinitial:hover,.searchiconfinal:hover{
+    border-width: 10px;
+  }
+  li{
+    list-style: none;
+  }
+  li img{
+    background-color:#efefef; 
+    padding-bottom:0;
+  }
+  li button:hover{
+    background-color: white;
+    cursor: pointer;
+  }
+  li button{
+    width: 100%;
+    background-color:#efefef; 
+    border: 0;
+    text-align: left;
+  }
+  ol{
+    margin: 1% 0 1% 0;
+    padding-left: 0;
+    width: 90%;
+  }
+  .lociconhovercolorchange{
+    background-color: white;
+  }
+  .currentbutton{
+    width: 90%;
+    margin-top: 5px;
+    text-align: left;
+    background-color: white;
+    border: none;
+  }
+  .currentbutton:hover{
+    border: 2px solid black;
+  }
